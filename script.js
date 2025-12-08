@@ -35,7 +35,7 @@ const roomsData = [
 ];
 
 // АДРЕС ТВОЕГО ЗАПУЩЕННОГО СЕРВЕРА
-const SERVER_URL = 'http://localhost:3000'; 
+const SERVER_URL = 'https://hotelbooking-gx1v.onrender.com';
 const CURRENT_USER_KEY = 'hotel_current_user';
 
 // --- ИНИЦИАЛИЗАЦИЯ ---
