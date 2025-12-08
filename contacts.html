@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Контакты - HotelBook</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">HotelBook 🏨</div>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="contacts.html" class="active">Контакты</a></li>
+                    <li id="profileLink" style="display: none;"><a href="profile.html">Кабинет</a></li>
+                    <li id="adminLink" style="display: none;"><a href="admin.html">Админ</a></li>
+                    <li><a href="#" id="authBtn">Войти</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Контакты</h1>
+        <div class="contacts-wrapper">
+            <div class="contact-info">
+                <h3>Наш адрес</h3>
+                <p>г. Москва, ул. Примерная, д. 10</p>
+                <p>Email: info@hotelbook.ru</p>
+                <p>Тел: +7 (999) 000-00-00</p>
+            </div>
+            
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Сообщение отправлено!');">
+                <h3>Напишите нам</h3>
+                <input type="text" placeholder="Ваше имя" required>
+                <input type="email" placeholder="Ваш Email" required>
+                <textarea placeholder="Сообщение" rows="5" required></textarea>
+                <button type="submit">Отправить</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Модальное окно нужно и здесь -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Вход</h2>
+            <form id="authForm">
+                <input type="text" id="username" placeholder="Логин" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <button type="submit" id="modalSubmitBtn">Войти</button>
+            </form>
+            <p id="toggleAuth"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

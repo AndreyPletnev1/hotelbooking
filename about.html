@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>О сервисе - HotelBook</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">HotelBook 🏨</div>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html" class="active">О нас</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li id="profileLink" style="display: none;"><a href="profile.html">Кабинет</a></li>
+                    <li id="adminLink" style="display: none;"><a href="admin.html">Админ</a></li>
+                    <li><a href="#" id="authBtn">Войти</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>О сервисе HotelBook</h1>
+        <div class="about-content">
+            <!-- Картинка путешествий, а не интерьера конкретного отеля -->
+            <img src="img/about-bg.avif" alt="Путешествия" style="width:100%; border-radius:8px; height: 400px; object-fit: cover;">
+            
+            <p style="margin-top: 20px; font-size: 1.1rem; line-height: 1.6;">
+                HotelBook — это удобный онлайн-сервис для быстрого поиска и бронирования жилья. 
+                Мы объединяем лучшие предложения от отелей, хостелов и апартаментов в одном месте. 
+                Наша платформа работает с 2010 года, и за это время мы помогли более 50 000 путешественников 
+                найти идеальное место для отдыха и командировок.
+            </p>
+            
+            <h3>Почему бронируют через нас?</h3>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li><strong>Большой выбор:</strong> От бюджетных номеров до президентских люксов.</li>
+                <li><strong>Честные цены:</strong> Бронирование без скрытых комиссий и переплат.</li>
+                <li><strong>Мгновенное подтверждение:</strong> Ваша бронь фиксируется в системе моментально.</li>
+                <li><strong>Удобство:</strong> Простой поиск с фильтрами по цене и категории.</li>
+                <li><strong>Надежность:</strong> Круглосуточная служба поддержки клиентов.</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Модальное окно (обязательно оставляем для входа) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Вход</h2>
+            <form id="authForm">
+                <input type="text" id="username" placeholder="Логин" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <button type="submit" id="modalSubmitBtn">Войти</button>
+            </form>
+            <p id="toggleAuth"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

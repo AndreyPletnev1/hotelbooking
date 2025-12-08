@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HotelBook - Бронирование номеров</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">HotelBook 🏨</div>
+           <nav>
+             <ul class="nav-list">
+                <li><a href="index.html" class="active">Главная</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li id="profileLink" style="display: none;"><a href="profile.html">Кабинет</a></li>
+                <li id="adminLink" style="display: none;"><a href="admin.html">Админ</a></li>
+                <li><a href="#" id="authBtn">Войти</a></li>
+                <li id="userInfo" style="display:none; color: #f1c40f;"></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Найдите идеальный номер для отдыха</h1>
+                <p>Лучшие отели по самым выгодным ценам</p>
+            </div>
+        </section>
+
+        <section class="filters container">
+            <div class="filter-card">
+                <h3>Фильтры</h3>
+                <label>Макс. цена за ночь:</label>
+                <input type="number" id="priceFilter" placeholder="Например, 5000">
+                
+                <label>Категория:</label>
+                <select id="typeFilter">
+                    <option value="all">Все</option>
+                    <option value="standard">Стандарт</option>
+                    <option value="luxe">Люкс</option>
+                    <option value="family">Семейный</option>
+                </select>
+                
+                <button onclick="applyFilters()">Применить</button>
+            </div>
+        </section>
+
+        <section id="catalog" class="catalog container">
+            <h2>Доступные номера</h2>
+            <div class="rooms-grid" id="roomsContainer">
+                <!-- Карточки генерируются JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно авторизации (ЛР4) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Вход</h2>
+            <form id="authForm">
+                <input type="text" id="username" placeholder="Логин" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <button type="submit" id="modalSubmitBtn">Войти</button>
+            </form>
+            <p id="toggleAuth">Нет аккаунта? <a href="#">Зарегистрироваться</a></p>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2114 AvtoVaz. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

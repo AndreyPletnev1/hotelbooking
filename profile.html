@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет - HotelBook</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">HotelBook 🏨</div>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li id="adminLink" style="display: none;"><a href="admin.html">Админ</a></li>
+                    <li><a href="#" id="authBtn">Войти</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Личный кабинет</h1>
+        <div class="profile-card">
+            <h2>Добро пожаловать, <span id="profileUsername">User</span>!</h2>
+            <p>Здесь вы можете управлять своими бронированиями.</p>
+        </div>
+
+        <section class="bookings-section">
+            <h3>Мои бронирования:</h3>
+            <div id="myBookingsList" class="bookings-list">
+                <!-- Сюда JS вставит брони -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно (копируем во все файлы, где нужен вход) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Вход</h2>
+            <form id="authForm">
+                <input type="text" id="username" placeholder="Логин" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <button type="submit" id="modalSubmitBtn">Войти</button>
+            </form>
+            <p id="toggleAuth"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

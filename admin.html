@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - HotelBook</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">HotelBook Admin 🛡️</div>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html">На сайт</a></li>
+                    <li><a href="#" id="logoutBtn">Выйти</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Панель администратора</h1>
+        
+        <section class="admin-section">
+            <h2>Журнал действий пользователей</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Пользователь</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody id="logsTableBody">
+                    <!-- Логи загружаются через JS -->
+                </tbody>
+            </table>
+            <button onclick="clearLogs()" style="background: #e74c3c; margin-top: 10px;">Очистить логи</button>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Небольшой скрипт инициализации специально для админки
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAccess(); // Проверка прав
+            renderLogs();       // Отрисовка логов
+            
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        });
+    </script>
+</body>
+</html>
