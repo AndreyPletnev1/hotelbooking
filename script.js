@@ -213,10 +213,8 @@ function openBookingModal(roomId) {
         return;
     }
 
-    // Находим данные номера по ID
     const room = roomsData.find(r => r.id === roomId);
     
-    // Заполняем модальное окно данными
     document.getElementById('bookingTitle').innerText = room.title;
     document.getElementById('bookingImg').src = room.img;
     document.getElementById('bookingDesc').innerText = room.desc;
@@ -225,49 +223,86 @@ function openBookingModal(roomId) {
     currentRoomPrice = room.price;
     currentRoomTitle = room.title;
 
-    // Сбрасываем даты на сегодня и завтра
+    // --- УСТАНОВКА ДАТ ---
+    const checkInInput = document.getElementById('checkInDate');
+    const checkOutInput = document.getElementById('checkOutDate');
+
+    // Сегодня
     const today = new Date().toISOString().split('T')[0];
+    // Завтра
     const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
     
-    document.getElementById('checkInDate').value = today;
-    document.getElementById('checkOutDate').value = tomorrow;
-    document.getElementById('checkInDate').min = today; // Нельзя выбрать прошлое
-    document.getElementById('checkOutDate').min = tomorrow;
+    checkInInput.value = today;
+    checkInInput.min = today; // Заезд не может быть в прошлом
+    
+    checkOutInput.value = tomorrow;
+    checkOutInput.min = tomorrow; // Выезд минимум завтра
 
-    calculateTotal(); // Считаем сразу при открытии
+    // --- УМНОЕ ПОВЕДЕНИЕ КАЛЕНДАРЯ ---
+    checkInInput.onchange = () => {
+        // Когда поменяли дату заезда -> обновляем минимум для выезда
+        const newDate = new Date(checkInInput.value);
+        // Следующий день после нового заезда
+        const nextDay = new Date(newDate.getTime() + 86400000).toISOString().split('T')[0];
+        
+        checkOutInput.min = nextDay;
+        
+        // Если старая дата выезда стала меньше новой минимальной - сдвигаем её
+        if (checkOutInput.value <= checkInInput.value) {
+            checkOutInput.value = nextDay;
+        }
+        calculateTotal();
+    };
 
-    // Показываем окно
+    checkOutInput.onchange = calculateTotal;
+
+    calculateTotal(); // Первичный подсчет
+
     const modal = document.getElementById('bookingModal');
     modal.style.display = 'block';
-
-    // Закрытие на крестик
     modal.querySelector('.close-booking').onclick = () => modal.style.display = 'none';
     
-    // Вешаем слушатели на изменение дат (чтобы пересчитывать цену)
-    document.getElementById('checkInDate').onchange = calculateTotal;
-    document.getElementById('checkOutDate').onchange = calculateTotal;
-    
-    // Обработка кнопки "Подтвердить"
     document.getElementById('bookingForm').onsubmit = submitBooking;
 }
-
 function calculateTotal() {
-    const d1 = new Date(document.getElementById('checkInDate').value);
-    const d2 = new Date(document.getElementById('checkOutDate').value);
+    const d1Input = document.getElementById('checkInDate');
+    const d2Input = document.getElementById('checkOutDate');
+    const btn = document.querySelector('.confirm-btn'); // Кнопка подтверждения
+    const priceText = document.getElementById('totalPrice');
     
-    // Разница во времени (в миллисекундах)
-    const diffTime = Math.abs(d2 - d1);
-    // Переводим в дни (делим на миллисекунды в сутках)
-    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    const d1 = new Date(d1Input.value);
+    const d2 = new Date(d2Input.value);
     
-    if (diffDays <= 0) diffDays = 1; // Минимум 1 ночь
+    // --- ПРОВЕРКА ДАТ ---
+    // Если дата выезда (d2) меньше или равна дате заезда (d1)
+    if (d2 <= d1) {
+        priceText.innerText = "Неверные даты";
+        priceText.style.color = "red";
+        document.getElementById('daysCount').innerText = "0";
+        
+        // Блокируем кнопку
+        btn.disabled = true;
+        btn.style.backgroundColor = "#ccc"; // Серый цвет
+        btn.style.cursor = "not-allowed";
+        return 0;
+    }
 
+    // Если всё ок — разблокируем кнопку
+    btn.disabled = false;
+    btn.style.backgroundColor = "#27ae60"; // Зеленый цвет
+    btn.style.cursor = "pointer";
+    priceText.style.color = "#2c3e50"; // Возвращаем цвет текста
+
+    // Считаем разницу
+    const diffTime = Math.abs(d2 - d1);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    
     const total = diffDays * currentRoomPrice;
 
     document.getElementById('daysCount').innerText = diffDays;
     document.getElementById('totalPrice').innerText = total.toLocaleString() + ' ₽';
     
-    return total; // Возвращаем сумму для отправки
+    return total;
 }
 
 async function submitBooking(e) {
