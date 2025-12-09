@@ -21,38 +21,62 @@
     </header>
 
     <main class="container">
-        <h1>Панель администратора</h1>
-        
+    <h1>Панель управления 💼</h1>
+    
+    <!-- СТАТИСТИКА (Новое) -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Выручка</h3>
+            <p id="totalIncome">0 ₽</p>
+        </div>
+        <div class="stat-card">
+            <h3>Всего броней</h3>
+            <p id="totalBookings">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Пользователей</h3>
+            <p id="totalUsers">0</p>
+        </div>
+    </div>
+
+    <div class="admin-columns">
+        <!-- БРОНИРОВАНИЯ -->
         <section class="admin-section">
-            <h2>Журнал действий пользователей</h2>
+            <h2>📅 Бронирования</h2>
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th>Время</th>
-                        <th>Пользователь</th>
-                        <th>Действие</th>
+                        <th>ID</th>
+                        <th>Дата</th>
+                        <th>Кто</th>
+                        <th>Номер</th>
+                        <th>Цена</th>
+                        <th>Упр.</th> <!-- Колонка для удаления -->
                     </tr>
                 </thead>
-                <tbody id="logsTableBody">
-                    <!-- Логи загружаются через JS -->
-                </tbody>
+                <tbody id="logsTableBody"></tbody>
             </table>
-            <button onclick="clearLogs()" style="background: #e74c3c; margin-top: 10px;">Очистить логи</button>
         </section>
-    </main>
 
+        <!-- ПОЛЬЗОВАТЕЛИ  -->
+        <section class="admin-section">
+            <h2>👥 Пользователи</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Логин</th>
+                        <th>Роль</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody"></tbody>
+            </table>
+        </section>
+    </div>
+</main>
+
+    <!-- Подключаем только основной скрипт -->
     <script src="script.js"></script>
-    <script>
-        // Небольшой скрипт инициализации специально для админки
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAdminAccess(); // Проверка прав
-            renderLogs();       // Отрисовка логов
-            
-            document.getElementById('logoutBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                logout();
-            });
-        });
-    </script>
+    
 </body>
 </html>
