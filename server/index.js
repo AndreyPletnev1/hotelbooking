@@ -73,6 +73,15 @@ app.delete('/bookings/:id', async (req, res) => {
 
 // Запуск
 const PORT = process.env.PORT || 3000;
+// 6. Получить всех пользователей (Только для админки)
+app.get('/users', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT id, username, role FROM users ORDER BY id DESC');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });

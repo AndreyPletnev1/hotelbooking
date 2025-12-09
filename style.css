@@ -269,3 +269,59 @@ body {
         grid-template-columns: 1fr;
     }
 }
+/* --- АДМИНКА PRO --- */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.stat-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.stat-card p {
+    margin: 10px 0 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.admin-columns {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Таблица броней шире, чем юзеров */
+    gap: 20px;
+}
+
+.delete-btn-mini {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.delete-btn-mini:hover {
+    background-color: #c0392b;
+}
+
+/* Адаптив для админки */
+@media (max-width: 900px) {
+    .admin-columns {
+        grid-template-columns: 1fr;
+    }
+}

@@ -304,21 +304,79 @@ function checkAdminAccess() {
     if(!user || user.role !== 'admin') window.location.href = 'index.html';
 }
 
-// Загрузка всех броней для админки
+
+// Загрузка ВСЕГО для админа
 async function loadAllBookingsAdmin() {
-    const tbody = document.getElementById('logsTableBody');
+    const tbodyBookings = document.getElementById('logsTableBody');
+    const tbodyUsers = document.getElementById('usersTableBody');
+    
+    // 1. Загружаем БРОНИРОВАНИЯ
     try {
         const res = await fetch(`${SERVER_URL}/bookings`);
-        const data = await res.json();
-        tbody.innerHTML = data.map(b => `
+        const bookings = await res.json();
+        
+        let income = 0;
+
+        tbodyBookings.innerHTML = bookings.map(b => {
+            income += b.price; // Считаем общую выручку
+            
+            // ВОТ ЗДЕСЬ БЫЛА ОШИБКА. Теперь мы раскладываем данные по 6 колонкам:
+            return `
             <tr>
-                <td>${b.date}</td>
-                <td>${b.username}</td>
-                <td>Забронировал: ${b.room_title} (${b.price}₽)</td>
+                <td>${b.id}</td>              <!-- 1. ID -->
+                <td>${b.date}</td>            <!-- 2. Дата -->
+                <td>${b.username}</td>        <!-- 3. Кто -->
+                <td>${b.room_title}</td>      <!-- 4. Номер -->
+                <td>${b.price} ₽</td>         <!-- 5. Цена -->
+                <td>                          <!-- 6. Кнопка удаления -->
+                    <button class="delete-btn-mini" onclick="adminDeleteBooking(${b.id})">🗑️</button>
+                </td>
             </tr>
-        `).join('');
-    } catch(e) {
-        console.error(e);
+            `;
+        }).join('');
+
+        // Обновляем статистику на карточках
+        if (document.getElementById('totalIncome')) {
+            document.getElementById('totalIncome').innerText = income.toLocaleString() + ' ₽';
+            document.getElementById('totalBookings').innerText = bookings.length;
+        }
+
+    } catch(e) { console.error(e); }
+
+    // 2. Загружаем ПОЛЬЗОВАТЕЛЕЙ
+    try {
+        const resUsers = await fetch(`${SERVER_URL}/users`);
+        if (resUsers.ok) {
+            const users = await resUsers.json();
+            if (document.getElementById('totalUsers')) {
+                document.getElementById('totalUsers').innerText = users.length;
+            }
+            
+            if (tbodyUsers) {
+                tbodyUsers.innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.id}</td>
+                        <td>${u.username}</td>
+                        <td>${u.role === 'admin' ? '🛡️ Админ' : '👤 Гость'}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+    } catch(e) { console.error('Не удалось загрузить юзеров', e); }
+}
+// Функция удаления брони Админом
+async function adminDeleteBooking(id) {
+    if(!confirm(`Вы точно хотите удалить бронь ID: ${id}?`)) return;
+    
+    try {
+        const res = await fetch(`${SERVER_URL}/bookings/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            loadAllBookingsAdmin(); // Перерисовать таблицу
+        } else {
+            alert('Ошибка удаления');
+        }
+    } catch (e) {
+        alert('Ошибка сервера');
     }
 }
 function clearLogs() { alert('В базе данных удалять логи нельзя через эту кнопку (для безопасности).'); }
