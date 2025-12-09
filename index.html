@@ -80,5 +80,40 @@
     </footer>
 
     <script src="script.js"></script>
+    <!-- Модальное окно БРОНИРОВАНИЯ (Новое) -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content booking-modal-content">
+        <span class="close-booking">&times;</span>
+        
+        <h2 id="bookingTitle">Название номера</h2>
+        <div class="booking-grid">
+            <img id="bookingImg" src="" alt="Room" class="booking-img-preview">
+            
+            <div class="booking-details">
+                <p id="bookingDesc" class="text-muted">Описание...</p>
+                <p class="price-tag">Цена за ночь: <span id="pricePerNight">0</span> ₽</p>
+                
+                <form id="bookingForm">
+                    <div class="date-group">
+                        <label>Дата заезда:</label>
+                        <input type="date" id="checkInDate" required>
+                    </div>
+                    
+                    <div class="date-group">
+                        <label>Дата выезда:</label>
+                        <input type="date" id="checkOutDate" required>
+                    </div>
+
+                    <div class="total-price-block">
+                        <p>Итого за <span id="daysCount">1</span> ночь:</p>
+                        <h3 id="totalPrice">0 ₽</h3>
+                    </div>
+
+                    <button type="submit" class="confirm-btn">Подтвердить бронирование</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -325,3 +325,90 @@ body {
         grid-template-columns: 1fr;
     }
 }
+/* --- СТИЛИ ОКНА БРОНИРОВАНИЯ --- */
+
+.booking-modal-content {
+    max-width: 700px; /* Окно пошире */
+    width: 90%;
+    text-align: left;
+    padding: 30px;
+}
+
+.booking-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.booking-img-preview {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.price-tag {
+    font-size: 1.2rem;
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.date-group {
+    margin-bottom: 15px;
+}
+
+.date-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.date-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+}
+
+.total-price-block {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: right;
+}
+
+.total-price-block h3 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin: 5px 0 0;
+}
+
+.confirm-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #27ae60;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.confirm-btn:hover {
+    background-color: #219150;
+}
+
+/* Адаптив для телефонов */
+@media (max-width: 700px) {
+    .booking-grid {
+        grid-template-columns: 1fr;
+    }
+    .booking-img-preview {
+        height: 200px;
+    }
+}

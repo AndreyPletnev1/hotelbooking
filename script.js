@@ -177,6 +177,7 @@ async function cancelBooking(id) {
 
 // --- ИНТЕРФЕЙСНЫЕ ФУНКЦИИ ---
 
+// --- 1. ОБНОВЛЕННАЯ ФУНКЦИЯ ОТРИСОВКИ (Вызывает модалку) ---
 function renderRooms(rooms) {
     const container = document.getElementById('roomsContainer');
     if (!container) return;
@@ -191,13 +192,117 @@ function renderRooms(rooms) {
                 <h3>${room.title}</h3>
                 <p>${room.desc}</p>
                 <div class="room-price">${room.price} ₽ / ночь</div>
-                <button onclick="bookRoom(${room.id}, '${room.title}', ${room.price})">Забронировать</button>
+                <!-- Теперь передаем объект room целиком (через ID) -->
+                <button onclick="openBookingModal(${room.id})">Забронировать</button>
             </div>
         `;
         container.appendChild(card);
     });
 }
 
+// --- 2. ЛОГИКА ОКНА БРОНИРОВАНИЯ ---
+
+let currentRoomPrice = 0; // Тут будем хранить цену выбранного номера
+let currentRoomTitle = "";
+
+function openBookingModal(roomId) {
+    const user = JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+    if (!user) {
+        alert('Сначала войдите в аккаунт!');
+        document.getElementById('authModal').style.display = 'block';
+        return;
+    }
+
+    // Находим данные номера по ID
+    const room = roomsData.find(r => r.id === roomId);
+    
+    // Заполняем модальное окно данными
+    document.getElementById('bookingTitle').innerText = room.title;
+    document.getElementById('bookingImg').src = room.img;
+    document.getElementById('bookingDesc').innerText = room.desc;
+    document.getElementById('pricePerNight').innerText = room.price;
+    
+    currentRoomPrice = room.price;
+    currentRoomTitle = room.title;
+
+    // Сбрасываем даты на сегодня и завтра
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    
+    document.getElementById('checkInDate').value = today;
+    document.getElementById('checkOutDate').value = tomorrow;
+    document.getElementById('checkInDate').min = today; // Нельзя выбрать прошлое
+    document.getElementById('checkOutDate').min = tomorrow;
+
+    calculateTotal(); // Считаем сразу при открытии
+
+    // Показываем окно
+    const modal = document.getElementById('bookingModal');
+    modal.style.display = 'block';
+
+    // Закрытие на крестик
+    modal.querySelector('.close-booking').onclick = () => modal.style.display = 'none';
+    
+    // Вешаем слушатели на изменение дат (чтобы пересчитывать цену)
+    document.getElementById('checkInDate').onchange = calculateTotal;
+    document.getElementById('checkOutDate').onchange = calculateTotal;
+    
+    // Обработка кнопки "Подтвердить"
+    document.getElementById('bookingForm').onsubmit = submitBooking;
+}
+
+function calculateTotal() {
+    const d1 = new Date(document.getElementById('checkInDate').value);
+    const d2 = new Date(document.getElementById('checkOutDate').value);
+    
+    // Разница во времени (в миллисекундах)
+    const diffTime = Math.abs(d2 - d1);
+    // Переводим в дни (делим на миллисекунды в сутках)
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    
+    if (diffDays <= 0) diffDays = 1; // Минимум 1 ночь
+
+    const total = diffDays * currentRoomPrice;
+
+    document.getElementById('daysCount').innerText = diffDays;
+    document.getElementById('totalPrice').innerText = total.toLocaleString() + ' ₽';
+    
+    return total; // Возвращаем сумму для отправки
+}
+
+async function submitBooking(e) {
+    e.preventDefault();
+    
+    const user = JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+    const d1 = document.getElementById('checkInDate').value;
+    const d2 = document.getElementById('checkOutDate').value;
+    const total = calculateTotal();
+
+    // Формируем красивую строку даты: "2025-10-10 — 2025-10-12"
+    const dateRange = `${d1} — ${d2}`;
+
+    try {
+        const response = await fetch(`${SERVER_URL}/bookings`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: user.username,
+                roomTitle: currentRoomTitle,
+                price: total, // Отправляем ОБЩУЮ сумму
+                date: dateRange
+            })
+        });
+        
+        if(response.ok) {
+            alert(`Успешно! Списано: ${total} ₽`);
+            document.getElementById('bookingModal').style.display = 'none';
+        } else {
+            alert('Ошибка при бронировании');
+        }
+    } catch (err) {
+        alert('Ошибка сервера');
+    }
+}
 function applyFilters() {
     const priceInput = document.getElementById('priceFilter').value;
     const typeSelect = document.getElementById('typeFilter').value;
