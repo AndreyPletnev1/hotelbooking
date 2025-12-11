@@ -34,8 +34,7 @@ const roomsData = [
     }
 ];
 
-// АДРЕС ТВОЕГО ЗАПУЩЕННОГО СЕРВЕРА
-const SERVER_URL = 'https://hotelbooking-gx1v.onrender.com';
+const SERVER_URL = 'http://localhost:3000';
 const CURRENT_USER_KEY = 'hotel_current_user';
 
 // --- ИНИЦИАЛИЗАЦИЯ ---
@@ -274,7 +273,7 @@ function calculateTotal() {
     const d2 = new Date(d2Input.value);
     
     // --- ПРОВЕРКА ДАТ ---
-    // Если дата выезда (d2) меньше или равна дате заезда (d1)
+    
     if (d2 <= d1) {
         priceText.innerText = "Неверные даты";
         priceText.style.color = "red";
@@ -282,16 +281,16 @@ function calculateTotal() {
         
         // Блокируем кнопку
         btn.disabled = true;
-        btn.style.backgroundColor = "#ccc"; // Серый цвет
+        btn.style.backgroundColor = "#ccc"; 
         btn.style.cursor = "not-allowed";
         return 0;
     }
 
     // Если всё ок — разблокируем кнопку
     btn.disabled = false;
-    btn.style.backgroundColor = "#27ae60"; // Зеленый цвет
+    btn.style.backgroundColor = "#27ae60";
     btn.style.cursor = "pointer";
-    priceText.style.color = "#2c3e50"; // Возвращаем цвет текста
+    priceText.style.color = "#2c3e50"; 
 
     // Считаем разницу
     const diffTime = Math.abs(d2 - d1);
@@ -313,7 +312,6 @@ async function submitBooking(e) {
     const d2 = document.getElementById('checkOutDate').value;
     const total = calculateTotal();
 
-    // Формируем красивую строку даты: "2025-10-10 — 2025-10-12"
     const dateRange = `${d1} — ${d2}`;
 
     try {
@@ -444,7 +442,43 @@ function checkAdminAccess() {
     if(!user || user.role !== 'admin') window.location.href = 'index.html';
 }
 
+// --- ЗАГРУЗКА ЛОГОВ (ЖУРНАЛ ДЕЙСТВИЙ) ---
+async function loadActivityLogs() {
+    const tbody = document.getElementById('activityLogsBody');
+    if (!tbody) return;
 
+    try {
+        const response = await fetch(`${SERVER_URL}/logs`);
+        if (response.ok) {
+            const logs = await response.json();
+            
+            tbody.innerHTML = logs.map(log => `
+                <tr>
+                    <td>${log.id}</td>
+                    <td style="color: #666; font-size: 0.9em;">${log.time}</td>
+                    <td><strong>${log.username}</strong></td>
+                    <td>
+                        <span style="${getActionStyle(log.action)}">
+                            ${log.action}
+                        </span>
+                    </td>
+                    <td>${log.details}</td>
+                </tr>
+            `).join('');
+        }
+    } catch (e) {
+        console.error('Ошибка загрузки логов', e);
+    }
+}
+
+// Вспомогательная функция для красоты (цветные статусы)
+function getActionStyle(action) {
+    if (action.includes('Вход')) return 'color: #2980b9; font-weight: bold;';
+    if (action.includes('Регистрация')) return 'color: #8e44ad; font-weight: bold;';
+    if (action.includes('Бронирование')) return 'color: #27ae60; font-weight: bold;';
+    if (action.includes('Удаление') || action.includes('Неудачный')) return 'color: #c0392b; font-weight: bold;';
+    return '';
+}
 // Загрузка ВСЕГО для админа
 async function loadAllBookingsAdmin() {
     const tbodyBookings = document.getElementById('logsTableBody');
@@ -460,7 +494,7 @@ async function loadAllBookingsAdmin() {
         tbodyBookings.innerHTML = bookings.map(b => {
             income += b.price; // Считаем общую выручку
             
-            // ВОТ ЗДЕСЬ БЫЛА ОШИБКА. Теперь мы раскладываем данные по 6 колонкам:
+        
             return `
             <tr>
                 <td>${b.id}</td>              <!-- 1. ID -->
@@ -503,6 +537,7 @@ async function loadAllBookingsAdmin() {
             }
         }
     } catch(e) { console.error('Не удалось загрузить юзеров', e); }
+    loadActivityLogs();
 }
 // Функция удаления брони Админом
 async function adminDeleteBooking(id) {

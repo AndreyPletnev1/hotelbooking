@@ -150,7 +150,7 @@ body {
     background-color: #219150;
 }
 
-/* Таблица админки (ЛР5/6) */
+/* Таблица админки  */
 .admin-table {
     width: 100%;
     border-collapse: collapse;
@@ -185,7 +185,6 @@ body {
         padding: 0;
     }
 }
-/* --- СТИЛИ ДЛЯ НОВЫХ СТРАНИЦ --- */
 
 /* Профиль */
 .profile-card {
